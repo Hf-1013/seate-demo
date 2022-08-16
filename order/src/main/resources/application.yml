@@ -49,3 +49,9 @@ seata:
       username: nacos
       password: nacos
       # 微服务必须在一个组，否则服务发现不了，但Seata-server 可以在不同的组中
+feign:
+  client:
+    config:
+      provider:
+        readTimeout: 5000
+

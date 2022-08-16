@@ -63,7 +63,7 @@ public class SeataOrderServiceImpl implements SeataOrderService {
         accountClient.reduceBalance(userId, amount);
 
         // 测试回滚
-        int i = 1/0;
+        //int i = 1/0;
         order.setStatus(OrderStatus.SUCCESS);
         order.setTotalPrice(amount);
         orderMapper.updateById(order);

@@ -48,3 +48,8 @@ seata:
       namespace: b707e020-94cc-4ef9-b5b8-6c20e06b49e3
       username: nacos
       password: nacos
+feign:
+  client:
+    config:
+      provider:
+        readTimeout: 5000
