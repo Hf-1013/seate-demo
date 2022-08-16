@@ -9,7 +9,7 @@ spring:
         server-addr: 172.31.217.42:8848
         username: nacos
         password: nacos
-        namespace: ba1c4732-b94f-4801-af71-5463a14247e6
+        namespace: b707e020-94cc-4ef9-b5b8-6c20e06b49e3
         group: SEATA_GROUP
   datasource:
     dynamic:
@@ -28,7 +28,7 @@ spring:
       seata: true # 使用多数据源要让这个属性设为true
 seata:
   application-id: ${spring.application.name}
-  enable-auto-data-source-proxy: true  # 使用多数据源设为false ,普通的情况下true
+  enable-auto-data-source-proxy: false  # 使用多数据源设为false ,普通的情况下true
   config:
     type: nacos # nacos 应该是目前比较常用的,以nacos为例子
     nacos:
