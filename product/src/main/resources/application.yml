@@ -48,6 +48,7 @@ seata:
       namespace: b707e020-94cc-4ef9-b5b8-6c20e06b49e3
       username: nacos
       password: nacos
+#  data-source-proxy-mode: XA
 feign:
   client:
     config:
