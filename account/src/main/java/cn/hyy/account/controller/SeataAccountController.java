@@ -1,6 +1,7 @@
 package cn.hyy.account.controller;
 
 
+import cn.hyy.account.service.AccountTccService;
 import cn.hyy.account.service.SeataAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +20,13 @@ public class SeataAccountController {
     @Autowired
     private SeataAccountService accountService;
 
+    @Autowired
+    private AccountTccService accountTccService;
+
     @PostMapping("/reduceBalance")
     public void reduceBalance(Long userId, BigDecimal amount) {
-        accountService.reduceBalance(userId, amount);
+        //TCC
+        accountTccService.deduct(userId, amount);
+        //accountService.reduceBalance(userId, amount);
     }
 }
