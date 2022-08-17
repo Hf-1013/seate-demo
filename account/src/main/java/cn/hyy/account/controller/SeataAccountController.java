@@ -28,6 +28,7 @@ public class SeataAccountController {
     public void reduceBalance(Long userId, BigDecimal amount) {
         //TCC
         accountTccService.deduct(userId, amount);
+        //AT
         //accountService.reduceBalance(userId, amount);
     }
 
