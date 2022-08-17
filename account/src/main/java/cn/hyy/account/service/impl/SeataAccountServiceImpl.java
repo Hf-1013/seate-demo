@@ -1,7 +1,9 @@
 package cn.hyy.account.service.impl;
 
 
+import cn.hyy.account.entity.PaymentMsg;
 import cn.hyy.account.entity.SeataAccount;
+import cn.hyy.account.mapper.PaymentMsgMapper;
 import cn.hyy.account.mapper.SeataAccountMapper;
 import cn.hyy.account.service.SeataAccountService;
 import io.seata.core.context.RootContext;
@@ -14,6 +16,7 @@ import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @Description: TODO
@@ -26,6 +29,8 @@ import java.math.BigDecimal;
 public class SeataAccountServiceImpl implements SeataAccountService {
     @Resource
     private SeataAccountMapper accountMapper;
+    @Resource
+    private PaymentMsgMapper paymentMsgMapper;
 
     /**
      * 事务传播特性设置为 REQUIRES_NEW 开启新的事务
@@ -50,5 +55,31 @@ public class SeataAccountServiceImpl implements SeataAccountService {
         accountMapper.updateById(account);
         log.info("扣减用户 {} 余额成功,扣减后用户账户余额为{}", userId, currentBalance);
         log.info("=============ACCOUNT END=================");
+    }
+
+    @Override
+    @Transactional
+    public void payment(Long userId, Integer orderId, BigDecimal amount) {
+        //支付操作
+        SeataAccount accountA = accountMapper.selectById(userId);
+        if(accountA == null){
+            throw new RuntimeException("支付失败");
+        }
+        if(accountA.getBalance().compareTo(amount) < 0){
+            throw new RuntimeException("余额不足");
+        }
+
+        accountA.setBalance(accountA.getBalance().subtract(amount));
+        accountMapper.updateById(accountA);
+
+        PaymentMsg paymentMsg = new PaymentMsg();
+        paymentMsg.setOrderId(orderId);
+        paymentMsg.setStatus(PaymentMsg.PaymentMsgStatus.WAITING_SEND); //未发送
+        paymentMsg.setFailCnt(0); //失败次数
+        paymentMsg.setCreateTime(new Date());
+        paymentMsg.setUserId(userId);
+        paymentMsg.setUpdateTime(new Date());
+
+        paymentMsgMapper.insert(paymentMsg);
     }
 }

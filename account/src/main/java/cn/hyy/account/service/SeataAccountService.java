@@ -15,4 +15,6 @@ public interface SeataAccountService {
      * @param amount  扣减金额
      */
     void reduceBalance(Long userId, BigDecimal amount);
+
+    void payment(Long userId, Integer orderId, BigDecimal amount);
 }

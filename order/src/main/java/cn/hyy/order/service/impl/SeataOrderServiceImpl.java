@@ -70,4 +70,37 @@ public class SeataOrderServiceImpl implements SeataOrderService {
         log.info("订单已成功下单");
         log.info("=============ORDER END=================");
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @GlobalTransactional(rollbackFor = Exception.class)
+    @DS("order")
+    public void placeOrderWithNoPay(PlaceOrderRequest request) {
+        Long userId = request.getUserId();
+        Long productId = request.getProductId();
+        Integer count = request.getCount();
+        log.info("收到下单请求,用户:{}, 商品:{},数量:{}", userId, productId, count);
+
+        SeataOrder order = SeataOrder.builder()
+                .userId(userId)
+                .productId(productId)
+                .status(OrderStatus.INIT)
+                .count(count)
+                .build();
+
+        orderMapper.insert(order);
+        // 扣减库存并计算总价
+        BigDecimal amount = productClient.reduceStock(productId, count);
+        //int i = 1/0;
+        order.setStatus(OrderStatus.WAITING_PAY);
+        order.setTotalPrice(amount);
+        orderMapper.updateById(order);
+        log.info("下单成功：{}，订单状态：{}", order, OrderStatus.WAITING_PAY);
+    }
+
+    @Override
+    public Boolean updateOrderStatus(Integer orderId, OrderStatus success) {
+        this.orderMapper.updateById(SeataOrder.builder().id(orderId).status(success).build());
+        return Boolean.TRUE;
+    }
 }

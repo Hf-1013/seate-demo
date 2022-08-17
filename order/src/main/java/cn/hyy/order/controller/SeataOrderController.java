@@ -33,23 +33,11 @@ public class SeataOrderController {
         return "下单成功";
     }
 
-    /**
-     * 测试商品库存不足-异常回滚
-     */
-    @PostMapping("/test1")
-    public String test1() {
-        //商品单价10元，库存20个,用户余额50元，模拟一次性购买22个。 期望异常回滚
-        orderService.placeOrder(new PlaceOrderRequest(1L, 1L, 22));
-        return "下单成功";
-    }
 
-    /**
-     * 测试用户账户余额不足-异常回滚
-     */
-    @PostMapping("/test2")
-    public String test2() {
-        //商品单价10元，库存20个，用户余额50元，模拟一次性购买6个。 期望异常回滚
-        orderService.placeOrder(new PlaceOrderRequest(1L, 1L, 6));
+
+    @PostMapping("/place-order-with-no-pay")
+    public String placeOrderWithNoPay(@Validated @RequestBody PlaceOrderRequest request){
+        orderService.placeOrderWithNoPay(request);
         return "下单成功";
     }
 }

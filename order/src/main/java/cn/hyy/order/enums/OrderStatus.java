@@ -12,6 +12,10 @@ public enum OrderStatus {
      */
     INIT,
     /**
+     * 待支付
+     */
+    WAITING_PAY,
+    /**
      * SUCCESS
      */
     SUCCESS,
